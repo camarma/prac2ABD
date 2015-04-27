@@ -14,5 +14,7 @@
     <mapping class="es.ucm.abd.practica2.model.Crossword"/>
     <mapping class="es.ucm.abd.practica2.model.Word"/>
     <mapping class="es.ucm.abd.practica2.model.WordOccurrence"/>
+    <mapping class="es.ucm.abd.practica2.model.Crucigrama"/>
+    <mapping class="es.ucm.abd.practica2.model.Definicion"/>
   </session-factory>
 </hibernate-configuration>

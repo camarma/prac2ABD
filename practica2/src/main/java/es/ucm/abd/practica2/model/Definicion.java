@@ -3,14 +3,29 @@ package es.ucm.abd.practica2.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Definicion {
 	
-	private Integer id;
-	private String enunciado;
+	@Id
+	@Column(name = "Id_Definicion")
+	private Integer id;	
+	@Column(nullable = false, length = 300)
+	private String enunciado;	
+	@Column(nullable = true)
 	private byte[] imagen;
+	@Column(nullable = false, length = 20)
 	private String respuesta;
+	@Column
 	private String[] etiquetas;
 	private List<Definicion> lstPalabras;
+	
+	protected Definicion(){
+		
+	}
 
 	public Definicion(String enunciado, String respuesta, String[] etiquetas){
 		this.enunciado = enunciado;
