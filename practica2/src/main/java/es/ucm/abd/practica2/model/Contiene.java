@@ -1,6 +1,5 @@
 package es.ucm.abd.practica2.model;
 
-import java.util.Collection;
 import java.util.List;
 
 
