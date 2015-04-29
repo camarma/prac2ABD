@@ -1,16 +1,33 @@
 package es.ucm.abd.practica2.model;
 
-import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
-
+@Entity
 public class Contiene {
-
+		@Id
+		@GeneratedValue(strategy = GenerationType.AUTO)
+		private Integer id;
+		@Column
 		private int pos_x;
+		@Column
 		private int pos_y;
+
 		private Orientation orientacion;
+		@ManyToOne
 		private Crucigrama crucigrama;
+		@ManyToOne
 		private Definicion palabra;
-		private List<Object[]> lstCrucigrama;
+		
+		public Contiene(){
+			
+		}
 		
 		public Contiene(int pos_x, int pos_y, Orientation orientacion){
 			this.pos_x 		 = pos_x;
@@ -45,12 +62,24 @@ public class Contiene {
 		public Orientation getOrientacion() {
 			return orientacion;
 		}
-		
-		public void addPalabraACruci(){
 
+		public Crucigrama getCrucigrama() {
+			return crucigrama;
 		}
-		public List<Crucigrama[]> listaCrucigramas(Crucigrama cruci){
-			
-			return null;
+
+		public void setCrucigrama(Crucigrama crucigrama) {
+			this.crucigrama = crucigrama;
+		}
+
+		public Definicion getPalabra() {
+			return palabra;
+		}
+
+		public void setPalabra(Definicion palabra) {
+			this.palabra = palabra;
+		}
+
+		public void setOrientacion(Orientation orientacion) {
+			this.orientacion = orientacion;
 		}
 }

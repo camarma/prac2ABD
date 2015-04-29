@@ -1,7 +1,9 @@
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import es.ucm.abd.practica2.dao.AbstractCrosswordDAO;
+import es.ucm.abd.practica2.dao.CrosswordDAO;
 import es.ucm.abd.practica2.model.Contiene;
 import es.ucm.abd.practica2.model.Crucigrama;
 import es.ucm.abd.practica2.model.Definicion;
@@ -27,8 +29,13 @@ public class CrosswordFacade implements AbstractCrosswordFacade<Crucigrama, Defi
 	@Override
 	public void addWordToCrossword(Crucigrama crossword, Definicion word, int row, int column, Orientation orientation) {
 		// TODO Auto-generated method stub
+				
+		List<Contiene> lstCont = new ArrayList<Contiene>();
+		lstCont = crossword.getLstCont();
 		Contiene cont = new Contiene(crossword, word, row, column, orientation);
-		cont.addPalabraACruci();
+		lstCont.add(cont);
+		crossword.setLstCont(lstCont);
+		//cont.addPalabraACruci();
 	}
 
 	@Override
@@ -64,13 +71,24 @@ public class CrosswordFacade implements AbstractCrosswordFacade<Crucigrama, Defi
 	@Override
 	public List<Object[]> getWordsOfCrossword(Crucigrama crossword) {
 		// TODO Auto-generated method stub
-		return null;
+		List<Object[]> lstTotal = new ArrayList<Object[]>();
+		List<Contiene> lstCont = new ArrayList<Contiene>();
+		lstCont = crossword.getLstCont();
+		for (int i = 0; lstCont.size()>i; i++){
+			lstTotal.add(new Object[]{
+				lstCont.get(i).getPalabra().getRespuesta(),
+				lstCont.get(i).getPos_x(),
+				lstCont.get(i).getPos_y(),
+				lstCont.get(i).getOrientacion()});
+		}
+		return lstTotal;
 	}
 
 	@Override
 	public AbstractCrosswordDAO<Crucigrama, Definicion> createDAO() {
 		// TODO Auto-generated method stub
-		return null;
+		CrosswordDAO cd = new CrosswordDAO();
+		return cd;
 	}
 
 }

@@ -4,24 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.OrderColumn;
 
 @Entity
 public class Definicion {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "Id_Definicion")
 	private Integer id;	
 	@Column(nullable = false, length = 300)
 	private String enunciado;	
-	@Column(nullable = true)
+	@Lob
 	private byte[] imagen;
-	@Column(nullable = false, length = 20)
+	@Column(nullable = false, length = 100)
 	private String respuesta;
-	@Column
+	@ElementCollection
+	@OrderColumn(name ="Id_etiqueta")
 	private String[] etiquetas;
-	private List<Definicion> lstPalabras;
 	
 	protected Definicion(){
 		
@@ -72,7 +78,5 @@ public class Definicion {
 	public void setEtiquetas(String[] etiquetas) {
 		this.etiquetas = etiquetas;
 	}
-	
-	
 }
 
