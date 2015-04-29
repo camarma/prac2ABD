@@ -1,5 +1,6 @@
 package es.ucm.abd.practica2.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -59,38 +60,50 @@ public class CrosswordDAO implements AbstractCrosswordDAO<Crucigrama, Definicion
 	public Crucigrama findCrosswordById(int id) {
 		// TODO Auto-generated method stub
 		Session session = this.sf.openSession();
-		Crucigrama crucigrama = null;
-		/*String hql = "select c.titulo, c.fecha_creacion from crucigrama as c where c.id= :id";
-		Query query = session.createQuery(hql);
-		query.setInteger("id", id);
-		List results = query.list();*/
-		
-		Query query = session.createQuery("select c.titulo, c.fecha_creacion from crucigrama as c"); 
-		query.setInteger("id", id);
-		List<Crucigrama> resultados =  query.list(); 
-		for (Crucigrama p : resultados) {     
-			crucigrama = new Crucigrama(p.getFecha_creacion(), p.getTitulo());
-		}
-		//System.out.println(results.get(0));
+		Crucigrama crucigrama = (Crucigrama) session.get(Crucigrama.class, id);
 		session.close();
 		return crucigrama;
 	}
 
 	@Override
 	public List<Object[]> getCrosswordData(String str) {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = this.sf.openSession();
+	
+		Query query = session.createQuery("SELECT cr.id, cr.titulo, cr.fecha_creacion, count(lc.id) "+
+										  "FROM Crucigrama as cr LEFT JOIN cr.lstCont lc "+ 
+										  "WHERE cr.titulo LIKE :str "+
+										  "group by cr.id"); 
+		query.setString("str", "%"+str+"%");
+		List<Object[]> resultados = query.list(); 
+		session.close();
+		return resultados;
 	}
 
 	@Override
 	public List<Definicion> findWordsByTags(String[] tags) {
 		// TODO Auto-generated method stub
-		return null;
+		Session session = this.sf.openSession();
+		Query query = null;
+		List<Definicion> resultados = null;
+		String hql = "FROM Definicion as d";
+		if(tags.length<=0){
+			query = session.createQuery(hql); 
+			resultados = query.list(); 
+		}else{
+			for(int i=0; i<tags.length;i++){
+				query = session.createQuery(hql+" where :tags MEMBER OF d.etiquetas"); 
+				query.setString("tags", tags[i]);
+				resultados = query.list();
+			}
+		}
+		session.close();
+		return resultados;
 	}
 
 	@Override
 	public List<Definicion> getMatchingWords(CharConstraint[] constraints) {
 		// TODO Auto-generated method stub
+		
 		return null;
 	}
 

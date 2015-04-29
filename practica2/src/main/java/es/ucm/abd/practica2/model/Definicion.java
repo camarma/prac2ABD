@@ -33,6 +33,13 @@ public class Definicion {
 		
 	}
 
+	public Definicion(String enunciado, String respuesta, String[] etiquetas, byte[] imagen){
+		this.enunciado = enunciado;
+		this.respuesta = respuesta;
+		this.etiquetas = etiquetas;
+		this.imagen    = imagen;
+	}
+	
 	public Definicion(String enunciado, String respuesta, String[] etiquetas){
 		this.enunciado = enunciado;
 		this.respuesta = respuesta;

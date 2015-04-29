@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,13 +20,13 @@ public class Crucigrama {
 
 	@Temporal(TemporalType.DATE)
 	private Date fecha_creacion;
-	@Column(nullable = false, length = 30, unique = true)
+	@Column(nullable = false, length = 100, unique = true)
 	private String titulo;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	
-	@OneToMany(mappedBy = "crucigrama", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "crucigrama", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	private List<Contiene> lstCont;
 	
 	public Crucigrama(){
