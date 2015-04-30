@@ -1,5 +1,6 @@
 package es.ucm.abd.practica2.dao;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import es.ucm.abd.practica2.model.Contiene;
 import es.ucm.abd.practica2.model.Crucigrama;
 import es.ucm.abd.practica2.model.Definicion;
 
@@ -103,9 +105,49 @@ public class CrosswordDAO implements AbstractCrosswordDAO<Crucigrama, Definicion
 	@Override
 	public List<Definicion> getMatchingWords(CharConstraint[] constraints) {
 		// TODO Auto-generated method stub
-		
-		return null;
+		Session session = this.sf.openSession();
+		Query query = null;
+		int j=0;
+		String respuesta="";
+		String character;
+		String position;
+		char letraRespuesta;
+		List<Definicion> resultados = null;
+		boolean ok = false;
+		List<Definicion> lstDefiniciones = new ArrayList<Definicion>();
+		String hql = "FROM Definicion as d";
+		query = session.createQuery(hql); 
+		resultados = query.list(); 
+		session.close();
+		if(constraints.length<=0){
+			return resultados;
+		}else{
+			for(int i=0; resultados.size()>i; i++){
+				for(j=0;constraints.length>j;j++){
+					respuesta = resultados.get(i).getRespuesta();
+					position = constraints[j].toString().split(" at ")[1];
+					character = constraints[j].toString().split(" at ")[0];
+					position = position.substring(0, position.length()-1);
+					character = character.substring(1);
+					if(resultados.get(i).getRespuesta().length()>=Integer.parseInt(position)){
+						letraRespuesta = resultados.get(i).getRespuesta().charAt(Integer.parseInt(position)-1);
+						if(character.charAt(0) == letraRespuesta){
+							//lstDefiniciones.add(resultados.get(i));
+							//j=constraints.length;
+							ok=true;
+						}else{
+							ok=false;
+						}
+					}if(Integer.parseInt(position)==resultados.get(i).getRespuesta().length()+1){
+						ok=false;
+					}
+				}
+				if(ok){
+					lstDefiniciones.add(resultados.get(i));
+				}
+				j=0;
+			}
+			return lstDefiniciones;
+		}
 	}
-
-	
 }
