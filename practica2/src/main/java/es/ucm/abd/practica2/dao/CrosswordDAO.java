@@ -1,14 +1,12 @@
 package es.ucm.abd.practica2.dao;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import es.ucm.abd.practica2.model.Contiene;
 import es.ucm.abd.practica2.model.Crucigrama;
 import es.ucm.abd.practica2.model.Definicion;
 
@@ -70,17 +68,18 @@ public class CrosswordDAO implements AbstractCrosswordDAO<Crucigrama, Definicion
 	@Override
 	public List<Object[]> getCrosswordData(String str) {
 		Session session = this.sf.openSession();
-	
 		Query query = session.createQuery("SELECT cr.id, cr.titulo, cr.fecha_creacion, count(lc.id) "+
 										  "FROM Crucigrama as cr LEFT JOIN cr.lstCont lc "+ 
 										  "WHERE cr.titulo LIKE :str "+
 										  "group by cr.id"); 
 		query.setString("str", "%"+str+"%");
+		@SuppressWarnings("unchecked")
 		List<Object[]> resultados = query.list(); 
 		session.close();
 		return resultados;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Definicion> findWordsByTags(String[] tags) {
 		// TODO Auto-generated method stub
@@ -89,8 +88,7 @@ public class CrosswordDAO implements AbstractCrosswordDAO<Crucigrama, Definicion
 		List<Definicion> resultados = null;
 		String hql = "FROM Definicion as d";
 		if(tags.length<=0){
-			query = session.createQuery(hql); 
-			resultados = query.list(); 
+			resultados = obtenerDefiniciones();
 		}else{
 			for(int i=0; i<tags.length;i++){
 				query = session.createQuery(hql+" where :tags MEMBER OF d.etiquetas"); 
@@ -105,9 +103,8 @@ public class CrosswordDAO implements AbstractCrosswordDAO<Crucigrama, Definicion
 	@Override
 	public List<Definicion> getMatchingWords(CharConstraint[] constraints) {
 		// TODO Auto-generated method stub
-		Session session = this.sf.openSession();
-		Query query = null;
 		int j=0;
+		@SuppressWarnings("unused")
 		String respuesta="";
 		String character;
 		String position;
@@ -115,10 +112,7 @@ public class CrosswordDAO implements AbstractCrosswordDAO<Crucigrama, Definicion
 		List<Definicion> resultados = null;
 		boolean ok = false;
 		List<Definicion> lstDefiniciones = new ArrayList<Definicion>();
-		String hql = "FROM Definicion as d";
-		query = session.createQuery(hql); 
-		resultados = query.list(); 
-		session.close();
+		resultados = obtenerDefiniciones();
 		if(constraints.length<=0){
 			return resultados;
 		}else{
@@ -132,8 +126,6 @@ public class CrosswordDAO implements AbstractCrosswordDAO<Crucigrama, Definicion
 					if(resultados.get(i).getRespuesta().length()>=Integer.parseInt(position)){
 						letraRespuesta = resultados.get(i).getRespuesta().charAt(Integer.parseInt(position)-1);
 						if(character.charAt(0) == letraRespuesta){
-							//lstDefiniciones.add(resultados.get(i));
-							//j=constraints.length;
 							ok=true;
 						}else{
 							ok=false;
@@ -149,5 +141,21 @@ public class CrosswordDAO implements AbstractCrosswordDAO<Crucigrama, Definicion
 			}
 			return lstDefiniciones;
 		}
+	}
+	
+	/**
+	 * Metodo encargado de obtener las definiciones de la base de datos.
+	 * @return Lista con las definiciones.
+	 */
+	@SuppressWarnings("unchecked")
+	private List<Definicion> obtenerDefiniciones(){
+		Session session = this.sf.openSession();
+		List<Definicion> resultados = null;
+		Query query = null;
+		String hql = "FROM Definicion as d";
+		query = session.createQuery(hql); 
+		resultados = query.list(); 
+		session.close();
+		return resultados;
 	}
 }
